@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.1.0'
+version = '0.2.0'
 
 REQUIREMENTS = [
     'beautifulsoup4',
@@ -10,13 +10,14 @@ REQUIREMENTS = [
 ]
 
 setup(
-    name='scrapy-amazon-robot-middleware',
+    name='scrapy-amazon-robot-middleware3',
     version=version,
     packages=find_packages(),
-    url='https://github.com/ziplokk1/scrapy-amazon-robot-middleware',
+    package_data={'captchabuster': ['iconset/**/*.gif']},
+    url='https://github.com/leon-wu/scrapy-amazon-robot-middleware',
     license='LICENSE.txt',
     author='Mark Sanders',
-    author_email='sdscdeveloper@gmail.com',
+    author_email='xmwlzhi@gmail.com',
     install_requires=REQUIREMENTS,
     description='Scrapy middleware module which uses image parsing to submit a captcha response to amazon.',
     include_package_data=True
