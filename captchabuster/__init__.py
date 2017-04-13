@@ -1,7 +1,7 @@
 import urllib
 import os
 import logging
-from StringIO import StringIO
+import io
 
 from PIL import Image
 import requests
@@ -31,8 +31,8 @@ class CaptchaBuster(object):
 
     def __init__(self, captcha_loc):
         self.original = Image.open(captcha_loc).convert('P')
-        self.temp_file = StringIO()
-        self.image_segment_files = [StringIO() for n in range(6)]
+        self.temp_file = io.StringIO()
+        self.image_segment_files = [io.StringIO() for n in range(6)]
         self.image_segments = []
         self.processed_captcha = Image.new('P', self.original.size, 255)
 
@@ -63,7 +63,7 @@ class CaptchaBuster(object):
         h['Referer'] = 'https://www.amazon.com/errors/validateCaptcha'
         if 'https://' not in url:
             url = url.replace('http', 'https')
-        io = StringIO(session.get(url, headers=h).content)
+        io = io.StringIO(session.get(url, headers=h).content)
         return CaptchaBuster(io)
 
     def _pre_process_captcha(self):
@@ -189,8 +189,8 @@ def test():
     #     f.write(session.get(soup.find('img').get('src')).content)
 
     # cb = CaptchaBuster('./%d_captcha.jpg' % t)
-    cb = CaptchaBuster(StringIO(session.get(soup.find('img').get('src')).content))
-    print cb.guess
+    cb = CaptchaBuster(io.StringIO(session.get(soup.find('img').get('src')).content))
+    print(cb.guess)
     # print 'Pass %d:' % t, cb.guess
 
 
@@ -260,7 +260,7 @@ class RobotMiddleware(object):
         # Occasionally the image will come back with no data or no image but instead html,
         # so retry the original request if that happens so that it filters back down the middleware
         try:
-            picture = StringIO(response.body)
+            picture = io.StringIO(response.body)
             cb = CaptchaBuster(picture)
             form_params['field-keywords'] = cb.guess
         except IOError:
