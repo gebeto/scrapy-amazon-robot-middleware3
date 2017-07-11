@@ -1,4 +1,4 @@
-import urllib
+import urllib.parse
 import os
 import logging
 import io
@@ -160,7 +160,7 @@ def crack_from_requests(session, content):
     cb = CaptchaBuster.from_url(url, session)
     params['field-keywords'] = cb.guess
 
-    url = action + '?' + urllib.urlencode(params)
+    url = action + '?' + urllib.parse.urlencode(params)
     return session.get(url)
 
 
@@ -251,6 +251,9 @@ class RobotMiddleware(object):
         }
 
         request.meta.update(meta)
+
+        self.logger.info('response text %s', response.text)
+        self.logger.info('request image {}'.format(url))
         return request.replace(url=url, dont_filter=True)
 
     def process_image(self, request, response):
@@ -268,7 +271,8 @@ class RobotMiddleware(object):
             return request.meta.get('original_request').replace(dont_filter=True)
         request.meta['image_request'] = False
         request.meta['captcha_submit'] = True
-        url = form_action + '?' + urllib.urlencode(form_params)
+        url = form_action + '?' + urllib.parse.urlencode(form_params)
+        self.logger.info('submit captcha {}'.format(url))
         return request.replace(url=url, dont_filter=True)
 
     def process_response(self, request, response, spider):
@@ -283,7 +287,7 @@ class RobotMiddleware(object):
             self.logger.warning('robot check {}'.format(request.meta.get('original_request') or request))
             return self.request_image(request, response)
         elif request.meta.get('image_request', False):
-            self.logger.debug('processing image {}'.format(request))
+            self.logger.info('processing image {}'.format(request))
             return self.process_image(request, response)
         else:
             self.cracking = False
