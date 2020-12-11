@@ -284,7 +284,9 @@ class RobotMiddleware(object):
         if request.meta.get('crack_retry_count', 0) > self.MAX_RETRY:
             raise IgnoreRequest('Max retries exceeded %s' % request.meta.get('original_request', request))
 
-        if isinstance(response, HtmlResponse) and 'robot check' in ''.join([x.strip().lower() for x in response.xpath('//title/text()').extract()]):
+        is_robot_check = 'robot check' in ''.join([x.strip().lower() for x in response.xpath('//title/text()').extract()])
+        is_robot_check_2 = "sure you're not a robot." in response.text
+        if isinstance(response, HtmlResponse) and (is_robot_check or is_robot_check_2):
             self.cracking = True
             self.crawler.stats.inc_value('robot_check')
             # Log the url of the original request that got blocked
