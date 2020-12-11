@@ -285,7 +285,7 @@ class RobotMiddleware(object):
             raise IgnoreRequest('Max retries exceeded %s' % request.meta.get('original_request', request))
 
         is_robot_check = 'robot check' in ''.join([x.strip().lower() for x in response.xpath('//title/text()').extract()])
-        is_robot_check_2 = "sure you're not a robot." in response.text
+        is_robot_check_2 = "sure you're not a robot." in response.body
         if isinstance(response, HtmlResponse) and (is_robot_check or is_robot_check_2):
             self.cracking = True
             self.crawler.stats.inc_value('robot_check')
