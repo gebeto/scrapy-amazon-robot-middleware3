@@ -208,7 +208,9 @@ class SessionTransferMiddleware(object):
         self.logger = logging.getLogger(self.__class__.__name__)
 
     def process_response(self, request, response, spider):
-        if response.status in self.handle or "Sorry, we just need to make sure you're not a robot." in response.text:
+        isin = "Sorry, we just need to make sure you're not a robot." in response.text
+        print(" >>>>> ISIN", isin)
+        if response.status in self.handle or isin:
             cookie = self.current_cookie + 1
             self.logger.info('transferring request to new cookiejar. cookiejar={} {}'.format(cookie, request))
             meta = request.meta
