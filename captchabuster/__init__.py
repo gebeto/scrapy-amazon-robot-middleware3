@@ -174,6 +174,8 @@ def load_images():
                 i = Image.open(os.path.join(letter_dir, img))
                 v = i.getdata()
                 d[letter].append({'image': i, 'data': v})
+                if i is not None:
+                    i.close()
     return d
 
 

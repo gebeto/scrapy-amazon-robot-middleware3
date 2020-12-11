@@ -5,7 +5,7 @@ version = '0.2.2'
 REQUIREMENTS = [
     'beautifulsoup4',
     'scrapy',
-    'pillow==4.0.0',
+    # 'pillow==4.0.0',
     'requests'
 ]
 
