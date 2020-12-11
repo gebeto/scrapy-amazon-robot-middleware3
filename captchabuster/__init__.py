@@ -286,7 +286,7 @@ class RobotMiddleware(object):
 
         print(" >>> BOBY", response.body)
         is_robot_check = 'robot check' in ''.join([x.strip().lower() for x in response.xpath('//title/text()').extract()])
-        is_robot_check_2 = "sure you're not a robot." in response.body
+        is_robot_check_2 = "sure you're not a robot." in str(response.body)
         if isinstance(response, HtmlResponse) and (is_robot_check or is_robot_check_2):
             self.cracking = True
             self.crawler.stats.inc_value('robot_check')
